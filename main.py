@@ -48,9 +48,17 @@ def generate_qr_code():
 
 
 def set_window_icon(window):
-    icon_path = "icon.ico"
-    window.iconbitmap(icon_path)
-
+    if sys.platform == "win32":
+        icon_path = "icon.ico"
+        window.iconbitmap(icon_path)
+    elif sys.platform == "darwin":
+        icon_path = "icon.icns"
+        icon_path_expanded = os.path.expanduser(icon_path)
+        if os.path.exists(icon_path_expanded):
+            window.iconbitmap(icon_path_expanded)
+    elif sys.platform.startswith("linux"):
+        icon_path = "icon.png"
+        window.iconphoto(True, tk.PhotoImage(file=icon_path))
 
 def open_github_repo():
     webbrowser.open("https://github.com/sillyangel/PyQR")
