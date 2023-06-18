@@ -66,7 +66,7 @@ def open_github_repo():
 
 # Create GUI window
 window = tk.Tk()
-window.title("QR Code Generator v1.1.0")
+window.title("QR Code Generator v1.1.1")
 window.geometry("294x500")
 set_window_icon(window)
 
@@ -107,4 +107,5 @@ generate_button.pack()
 qr_label = tk.Label(window)
 qr_label.pack(pady=10)
 
+#window open and make sure no closing
 window.mainloop()
