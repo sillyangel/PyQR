@@ -39,7 +39,7 @@ def generate_qr_code():
         os.makedirs("qr_codes")
 
     # Save QR code image
-    filename = f"qr_codes/{random.randint(0, 100000)}_{data}.png"
+    filename = f"qr_codes/{random.randint(0, 100000)}.png"
     qr_img.save(filename)
 
     # Print the filename in the console
