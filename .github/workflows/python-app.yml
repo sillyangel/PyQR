@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'main.py'
-      - 'icon.png'
 
 jobs:
   build:
@@ -29,7 +26,7 @@ jobs:
 
       - name: Build and package app
         run: |
-          pyinstaller --noconfirm --onefile --windowed --icon "/workspaces/PyQR/icon.ico" --add-data "/workspaces/PyQR/icon.icns:.icon.icns" --add-data "/workspaces/PyQR/icon.ico:.icon.ico" --add-data "/workspaces/PyQR/icon.png:.icon.png"  "/workspaces/PyQR/main.py"
+          pyinstaller --noconfirm --onefile --windowed --icon "icon.ico" --add-data "icon.icns:.icon.icns" --add-data "icon.ico:.icon.ico" --add-data "icon.png:.icon.png"  "main.py"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
