@@ -10,16 +10,36 @@ import webbrowser
 
 def generate_qr_code():
     # Get user input from GUI
-    data = data_entry.get().strip()
+    data = ""
     fill_color = fill_color_entry.get() or "black"
     back_color = back_color_entry.get() or "white"
     size = size_entry.get() or 300
     selected_type = selected_option.get()
 
     # Validate user input
-    if not data:
-        messagebox.showerror("Error", "Please enter data for the QR code.")
-        return
+    if selected_type == "Plain Text":
+        data = data_entry.get().strip()
+        if not data:
+            messagebox.showerror("Error", "Please enter data for the QR code.")
+            return
+    elif selected_type == "Wifi":
+        ssid = ssid_entry.get().strip()
+        password = password_entry.get().strip()
+        encryption = encryption_entry.get().strip() or "WPA"
+
+        # Validate SSID input
+        if not ssid:
+            messagebox.showerror("Error", "Please enter the SSID for the Wifi QR code.")
+            return
+
+        # Generate Wifi QR code
+        data = f"WIFI:T:{encryption};S:{ssid};P:{password};;"
+    elif selected_type == "Phone Number":
+        # TODO: Generate QR code for Phone Number
+        pass
+    elif selected_type == "vCard":
+        # TODO: Generate QR code for vCard
+        pass
 
     # Generate QR code
     qr = qrcode.QRCode(version=1, box_size=10, border=4)
@@ -68,7 +88,7 @@ def open_github_repo():
 
 # Create GUI window
 window = tk.Tk()
-window.title("QR Code Generator v1.2.0")
+window.title("QR Code Generator v1.1.1")
 window.geometry("294x500")
 set_window_icon(window)
 
@@ -83,21 +103,72 @@ help_menu = tk.Menu(menu_bar, tearoff=False)
 menu_bar.add_cascade(label="Help", menu=help_menu)
 help_menu.add_command(label="GitHub Repository", command=open_github_repo)
 
-dropdown_label = tk.Label(window, text="Select Type:")
-dropdown_label.pack()
+# Data input for Plain Text
+data_label = tk.Label(window, text="Data:")
+data_label.pack()
+data_entry = tk.Entry(window)
+data_entry.pack()
+
+# Data inputs for Wifi
+ssid_label = tk.Label(window, text="SSID (Wifi):")
+ssid_label.pack()
+ssid_entry = tk.Entry(window)
+ssid_entry.pack()
+password_label = tk.Label(window, text="Password (optional):")
+password_label.pack()
+password_entry = tk.Entry(window)
+password_entry.pack()
+encryption_label = tk.Label(window, text="Encryption (optional, default: WPA):")
+encryption_label.pack()
+encryption_entry = tk.Entry(window)
+encryption_entry.pack()
+
+# Hide Wifi inputs by default
+ssid_label.pack_forget()
+ssid_entry.pack_forget()
+password_label.pack_forget()
+password_entry.pack_forget()
+encryption_label.pack_forget()
+encryption_entry.pack_forget()
 
 # Dropdown menu options
 options = ['Plain Text', 'Wifi', 'Phone Number', 'vCard']
 selected_option = tk.StringVar(window)
 selected_option.set(options[0])  # Set the default selected option
 
+dropdown_label = tk.Label(window, text="Select Type:")
+dropdown_label.pack()
+
 dropdown_menu = tk.OptionMenu(window, selected_option, *options)
 dropdown_menu.pack()
 
-data_label = tk.Label(window, text="Data:")
-data_label.pack()
-data_entry = tk.Entry(window)
-data_entry.pack()
+
+def update_fields(*args):
+    selected_type = selected_option.get()
+    if selected_type == "Plain Text":
+        data_label.pack()
+        data_entry.pack()
+        ssid_label.pack_forget()
+        ssid_entry.pack_forget()
+        password_label.pack_forget()
+        password_entry.pack_forget()
+        encryption_label.pack_forget()
+        encryption_entry.pack_forget()
+    elif selected_type == "Wifi":
+        data_label.pack_forget()
+        data_entry.pack_forget()
+        ssid_label.pack()
+        ssid_entry.pack()
+        password_label.pack()
+        password_entry.pack()
+        encryption_label.pack()
+        encryption_entry.pack()
+    else:
+        # TODO: Hide/show inputs for other options
+        pass
+
+
+selected_option.trace("w", update_fields)
 
 fill_color_label = tk.Label(window, text="Fill Color (optional):")
 fill_color_label.pack()
